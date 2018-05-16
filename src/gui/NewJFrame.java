@@ -149,8 +149,12 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void login_login_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         // TODO add your handling code here:
-    	if(accountNumber_login_jTextField.getText() == "" || password_login_jPasswordField.getPassword().toString() == "") {
-    		Message login_msg = new Message(accountNumber_login_jTextField.getText(),password_login_jPasswordField.getPassword().toString(),0,0,"*");
+    	String accNo = accountNumber_login_jTextField.getText().trim();
+    	String psw = String.valueOf(password_login_jPasswordField.getPassword()).trim();
+    	System.out.println(psw);
+    	
+    	if(!accNo.equals("") &&  !psw.equals("")) {
+    		Message login_msg = new Message(accNo,psw,0,0,"*");
     	
     		client.sendMSG(login_msg);
     		Message login_ack = client.ReciveMSG();
