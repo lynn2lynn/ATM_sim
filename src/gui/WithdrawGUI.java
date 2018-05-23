@@ -1,5 +1,11 @@
 package gui;
 
+import javax.swing.JOptionPane;
+
+import log.LogDir;
+import log.Message;
+import log.OptionQueue;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -72,8 +78,18 @@ public class WithdrawGUI extends javax.swing.JFrame {
         });
 
         m1000_witd_jButton.setText("1000");
+        m1000_witd_jButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m1000_witd_jButtonActionPerformed(evt);
+            }
+        });
 
         m2000_witd_jButton.setText("2000");
+        m2000_witd_jButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m2000_witd_jButtonActionPerformed(evt);
+            }
+        });
 
         cancel_witd_jButton.setText("取消");
         cancel_witd_jButton.addActionListener(new java.awt.event.ActionListener() {
@@ -154,36 +170,65 @@ public class WithdrawGUI extends javax.swing.JFrame {
     private void m300_witd_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
     	withdraw_money = 300;
-    	this.withdraw_action();
+    	int n=JOptionPane.showConfirmDialog(null, "取款300RMB，确认请选择\"是\"","",JOptionPane.YES_NO_OPTION);
+    	if(n==0) {
+    		this.withdraw_action();
+    	}
     } 
     
     private void m1000_witd_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
     	withdraw_money = 1000;
-    	this.withdraw_action();
+    	int n=JOptionPane.showConfirmDialog(null, "取款1000RMB，确认请选择\"是\"","",JOptionPane.YES_NO_OPTION);
+    	if(n==0) {
+    		this.withdraw_action();
+    	}
     }
     
     private void m2000_witd_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
     	withdraw_money = 2000;
-    	this.withdraw_action();
+    	int n=JOptionPane.showConfirmDialog(null, "取款2000RMB，确认请选择\"是\"","",JOptionPane.YES_NO_OPTION);
+    	if(n==0) {
+    		this.withdraw_action();
+    	}
     }
 
     private void m100_witd_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
     	withdraw_money = 100;
-    	this.withdraw_action();
+    	int n=JOptionPane.showConfirmDialog(null, "取款100RMB，确认请选择\"是\"","",JOptionPane.YES_NO_OPTION);
+    	if(n==0) {
+    		this.withdraw_action();
+    	}
     }                                                 
 
     private void m500_witd_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
     	withdraw_money = 500;
-    	this.withdraw_action();
+    	int n=JOptionPane.showConfirmDialog(null, "取款500RMB，确认请选择\"是\"","",JOptionPane.YES_NO_OPTION);
+    	if(n==0) {
+    		this.withdraw_action();
+    	}
+    	
     }      
     
     private void withdraw_action() {
     	// TODO add your handling code here:
-    	
+    	//int withdraw_money
+    	Message with_msg = new Message(System.currentTimeMillis(),User.accNo,User.psw,Message.WITHDRAW_NO,this.withdraw_money,"*");
+    	User.client.sendMSG(with_msg);
+		User.log.writeLog(with_msg);
+		Message ack = User.client.ReciveMSG();
+		if(ack.getOperation() == Message.WITHDRAW_NO) {
+			User.log.writeLog(LogDir.COMMITTED);
+			User.opq.push(with_msg);
+			User.balance = ack.getDeal();
+			JOptionPane.showMessageDialog(this.getContentPane(), "取款成功！");
+		}
+		else {
+			JOptionPane.showMessageDialog(this.getContentPane(), "取款失败！");
+		}
     }
     
 

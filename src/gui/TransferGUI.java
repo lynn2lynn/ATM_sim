@@ -2,6 +2,10 @@ package gui;
 
 import javax.swing.JOptionPane;
 
+import log.LogDir;
+import log.Message;
+import log.OptionQueue;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -131,7 +135,7 @@ public class TransferGUI extends javax.swing.JFrame {
 
     private void ok_transfer_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         // TODO add your handling code here:
-    	if(accNo_transfer_jTextField.getText().isEmpty() || money_transfer_jTextField.getText().isEmpty()) {
+    	if(accNo_transfer_jTextField.getText().trim().equals("") || money_transfer_jTextField.getText().trim().equals("")) {
     		JOptionPane.showMessageDialog(this.getContentPane(), "请补全信息！");
     	}
     	else {
@@ -139,8 +143,10 @@ public class TransferGUI extends javax.swing.JFrame {
     		transfer_money = Double.parseDouble(money_transfer_jTextField.getText());
     		System.out.println(transfer_money);
     		System.out.println(other_account_no);
-    		
-    		JOptionPane.showMessageDialog(this.getContentPane(), "转账成功！");
+    		int n=JOptionPane.showConfirmDialog(null, "转账 "+transfer_money+" RMB到银行卡号"+other_account_no+" ？ 确认请选择\"是\"","",JOptionPane.YES_NO_OPTION);
+    		if(n == 0) {
+    			this.transfer_action();
+    		}
     	}
     }                                                   
 
@@ -148,7 +154,24 @@ public class TransferGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     	new FuncFrame().setVisible(true);
     	this.setVisible(false);
-    }                                                       
+    }      
+    
+    private void transfer_action() {
+    	
+    	Message tran_msg = new Message(System.currentTimeMillis(),User.accNo,User.psw,Message.TRANSFER_NO,this.transfer_money,"*");
+    	User.client.sendMSG(tran_msg);
+    	User.log.writeLog(tran_msg);
+		Message ack = User.client.ReciveMSG();
+		if(ack.getOperation() == Message.TRANSFER_NO) {
+			User.log.writeLog(LogDir.COMMITTED);
+			User.opq.push(tran_msg);
+			User.balance = ack.getDeal();
+			JOptionPane.showMessageDialog(this.getContentPane(), "转账成功！");
+		}
+		else {
+			JOptionPane.showMessageDialog(this.getContentPane(), "转账失败！");
+		}
+    }
 
     /**
      * @param args the command line arguments

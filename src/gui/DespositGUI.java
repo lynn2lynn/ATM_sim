@@ -1,5 +1,11 @@
 package gui;
 
+import javax.swing.JOptionPane;
+
+import log.LogDir;
+import log.Message;
+import log.OptionQueue;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -158,31 +164,51 @@ public class DespositGUI extends javax.swing.JFrame {
     private void m100_desp_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
     	desposit_money = 100;
-    	this.desposit_action();
+    	int n=JOptionPane.showConfirmDialog(null, "取款100RMB，确认请选择\"是\"","",JOptionPane.YES_NO_OPTION);
+    	if(n == 0) {
+    		this.desposit_action();
+    	}
+    	
     }                                                 
 
     private void m300_desp_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
     	desposit_money = 300;
-    	this.desposit_action();
+    	int n=JOptionPane.showConfirmDialog(null, "取款300RMB，确认请选择\"是\"","",JOptionPane.YES_NO_OPTION);
+    	if(n == 0) {
+    		this.desposit_action();
+    	}
+    	
     }                                                 
 
     private void m500_desp_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
     	desposit_money = 500;
-    	this.desposit_action();
+    	int n=JOptionPane.showConfirmDialog(null, "取款500RMB，确认请选择\"是\"","",JOptionPane.YES_NO_OPTION);
+    	if(n == 0) {
+    		this.desposit_action();
+    	}
+    	
     }                                                 
 
     private void m1000_desp_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
         // TODO add your handling code here:
     	desposit_money = 1000;
-    	this.desposit_action();
+    	int n=JOptionPane.showConfirmDialog(null, "取款1000RMB，确认请选择\"是\"","",JOptionPane.YES_NO_OPTION);
+    	if(n == 0) {
+    		this.desposit_action();
+    	}
+    	
     }                                                  
 
     private void m2000_desp_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
         // TODO add your handling code here:
     	desposit_money = 2000;
-    	this.desposit_action();
+    	int n=JOptionPane.showConfirmDialog(null, "取款2000RMB，确认请选择\"是\"","",JOptionPane.YES_NO_OPTION);
+    	if(n == 0) {
+    		this.desposit_action();
+    	}
+    	
     }                                                  
 
     private void cancel_desp_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
@@ -193,7 +219,20 @@ public class DespositGUI extends javax.swing.JFrame {
     
     private void desposit_action() {
     	// TODO add your handling code here:
-    	
+    	//int desposit_money
+    	Message desp_msg = new Message(System.currentTimeMillis(),User.accNo,User.psw,Message.DESPOSIT_NO,this.desposit_money,"*");
+    	User.client.sendMSG(desp_msg);
+    	User.log.writeLog(desp_msg);
+		Message ack = User.client.ReciveMSG();
+		if(ack.getOperation() == Message.DESPOSIT_NO) {
+			User.log.writeLog(LogDir.COMMITTED);
+			User.opq.push(desp_msg);
+			User.balance = ack.getDeal();
+			JOptionPane.showMessageDialog(this.getContentPane(), "存款成功！");
+		}
+		else {
+			JOptionPane.showMessageDialog(this.getContentPane(), "存款失败！");
+		}
     }
 
     /**

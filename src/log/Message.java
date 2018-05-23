@@ -1,107 +1,126 @@
 package log;
 
-public class Message{
-	
-	
+import java.text.SimpleDateFormat;
+import java.util.Scanner;
 
-	private static long msgSand = 0;
-	
-//	private long msgSec;
-//	private boolean isCompleted;
-	
+public class Message {
 	private long timeStamp;
 	private String accountNumber;
 	private String password;
-	private int operation;
+	private int operation; // 1 2 3
 	private double deal;
-	
 	private String otherAccount;
 	
-	public Message() {
-		super();
-//		this.msgSec = ++Message.msgSand;
-//		this.isCompleted = false;
-		this.timeStamp = System.currentTimeMillis();
-		
-	}
+	public static final int LOGIN_NO = 6;
+	public static final int EXIT_NO = 9;
+	public static final int DESPOSIT_NO = 1;
+	public static final int WITHDRAW_NO = 2;
+	public static final int TRANSFER_NO = 3;
+	public static final int INQUIRE_NO = 4;
+	public static final int KEEPALIVE_NO = -1;
+	public static final int ERROR_NO = 99;
+	public static final int COMMITED_NO = 66;
 	
-	public Message(String accontNumber,String password,int operation,double deal,String other_accountNumber) {
-		super();
-//		this.msgSec = ++Message.msgSand;
-//
-//		this.isCompleted = false;
-		this.timeStamp = System.currentTimeMillis();
-		this.accountNumber = accontNumber;
+	/**
+	 * @param timeStamp
+	 * @param accountNumber
+	 * @param password
+	 * @param operation
+	 * @param deal
+	 * @param otherAccount
+	 */
+	public Message(long timeStamp, String accountNumber,
+			       String password, int operation,
+			       double deal, String otherAccount){
+		
+		this.accountNumber = accountNumber;
+		this.timeStamp = timeStamp;
 		this.password = password;
 		this.operation = operation;
 		this.deal = deal;
-
-		this.otherAccount = other_accountNumber;
-
-	}
-	public void setOperation(int x) {
-		this.operation = x;
+		this.otherAccount = otherAccount;
 	}
 	
+	public static Message parse(String src){
+		Scanner scan = new Scanner(src);
+		Message msg = new Message(scan.nextLong(), scan.next(), scan.next(), scan.nextInt(),
+				scan.nextDouble(), scan.next());
+		scan.close();
+		return msg;
+	}
+	
+	public void setDeal(double deal) {
+		this.deal = deal;
+	}
+	public void setTimeStamp(long timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public void setOperation(int operation) {
+		this.operation = operation;
+	}
+	public void setOtherAccount(String otherAccount) {
+		this.otherAccount = otherAccount;
+	}
+	public long getTimeStamp() {
+		return timeStamp;
+	}
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+	public String getPassword() {
+		return password;
+	}
 	public int getOperation() {
-		return this.operation;
+		return operation;
+	}
+	public double getDeal() {
+		return deal;
+	}
+	public String getOtherAccount() {
+		return otherAccount;
 	}
 	
-//	public long getMsgSec() {
-//		return this.msgSec;
-//	}
-//	public boolean getIsCompleted() {
-//		return this.isCompleted;
-//	}
-	
-	public String msgArchive() {
-		String str = this.timeStamp+"\t"
-					+this.accountNumber+"\t"
-					+this.password+"\t"
-					+this.operation+"\t"
-					+this.deal+"\t"
-					+this.otherAccount+"\n";
+	public String toString(){
+		String str = "";
+		
+		str += timeStamp+"\t";
+		str += accountNumber+"\t";
+		str += password+"\t";
+		str += operation+"\t";
+		str += deal+"\t";
+		if(otherAccount == null || "".equals(otherAccount)){
+			str += "*";
+		}else{
+			str += otherAccount;
+		}
+		
 		return str;
 	}
 	
-	public void msgDeArchive(String amail) {
-		String[] mailContent = amail.split("\\s+"); 
-
-		if(mailContent.length == 10) {
-			this.timeStamp = Long.parseLong(mailContent[0]);
-			this.accountNumber = mailContent[1];
-			this.password = mailContent[2];
-			this.operation = Integer.parseInt(mailContent[3]);
-			this.deal = Double.parseDouble(mailContent[4]);
-			this.otherAccount = mailContent[5];
-		}
-	}
-	
-//	public void msgisComplete() {
-//		this.isCompleted = true;
-//	}
-	
-	public void printMessage() {
+	public String displayOnText() {
+		String str = "\n交易:\t";
+		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-//		System.out.println("-----------("+this.msgSec+")-----------");
-//		System.out.println(this.isCompleted);
-		System.out.println(this.timeStamp);
-		System.out.println(this.accountNumber);
-		System.out.println(this.password);
-		System.out.println(this.operation);
-		System.out.println(this.deal);
-
-		System.out.println(this.otherAccount);
-
+		str += ft.format(this.timeStamp)+"\n";
+		str += operationName(this.operation)+"\n";
+		str += "交易金额："+this.deal+"\n";
+		return str;
 	}
 	
+	private String operationName(int op) {
+		String name = null;
+		switch(op) {
+		case 1: name = "取款";break;
+		case 2: name = "存款";break;
+		case 3: name = "转账  对方账号"+this.otherAccount;break;
+		}
+		
+		return name;
+	}
 }
-/**
- * 操作细化
- * @author LYNN
- * 存钱：故障（1）钱已经放进去了（2）钱还没放进去    操作细化：【1申请操作】点击“存款”，开始操作；【2硬件检验】放钱，有【判断】模拟机器验钞；【3操作完成】账户信息可以发生变化
- * 取钱：（1）金额减少，但是不吐钞（不考虑） （2）钱取出来 但是发生故障。
- * 转账：
- * 打印：重新打印即可
- */
-

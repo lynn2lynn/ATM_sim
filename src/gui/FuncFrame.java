@@ -1,5 +1,8 @@
 package gui;
 
+import log.Message;
+//import socket.Client;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,11 +15,21 @@ package gui;
  */
 public class FuncFrame extends javax.swing.JFrame {
 
-    /**
+	private static final long serialVersionUID = -4982061852687350309L;
+	
+	
+	//private Client client;
+	private User usr;
+	
+	/**
      * Creates new form FuncFrame
      */
     public FuncFrame() {
-        initComponents();
+        
+    	initComponents();
+    	System.out.println(User.accNo+"\t"+User.psw);
+        this.putBalanceOnAccount_func_jTextPane1();
+        
     }
 
     /**
@@ -181,7 +194,21 @@ public class FuncFrame extends javax.swing.JFrame {
     private void cancel_func_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         // TODO add your handling code here:
     	System.exit(0);
-    }                                                   
+    } 
+    
+    private void putBalanceOnAccount_func_jTextPane1() {
+    	
+    	Message msg = new Message(System.currentTimeMillis(),User.accNo,User.psw,5,0,"*");//≤È—Ø∏√’Àªß”‡∂Ó
+    	
+    	
+//    	Client cli = new Client();
+//    	cli.initClient();
+//    	cli.sendMSG(msg);
+//    	
+//    	msg = cli.ReciveMSG();
+    	//account_func_jTextPane1.setText();
+    	account_func_jTextPane1.setText(User.balance+"");
+    }
 
     /**
      * @param args the command line arguments

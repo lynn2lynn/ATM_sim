@@ -1,6 +1,11 @@
 package gui;
 
+import java.util.Iterator;
+
 import javax.swing.JOptionPane;
+
+import log.Message;
+import log.OptionQueue;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -117,6 +122,8 @@ public class PaintingGUI extends javax.swing.JFrame {
 
     private void paint_paint_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         // TODO add your handling code here:
+    	this.paint_action();
+    	
     	JOptionPane.showMessageDialog(this.getContentPane(), "´òÓ¡³É¹¦£¡");
     }                                                   
 
@@ -124,7 +131,18 @@ public class PaintingGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     	new FuncFrame().setVisible(true);
     	this.setVisible(false);
-    }                                                    
+    } 
+    
+    private void paint_action() {
+    	bill_text = "";
+    	bill_text += Cfg.getBankName()+Cfg.getBranchName()+"»¶Ó­Äú£¡\n"+"ATM±àºÅ"+Cfg.getAtmsn()+"\n";
+    	Iterator<Message> it = User.opq.getOpq().iterator();
+    	while(it.hasNext()) {
+    		Message msg = it.next();
+    		bill_text += msg.displayOnText();
+    	}
+    	proof_paint_jTextArea.setText(bill_text);
+    }
 
     /**
      * @param args the command line arguments
@@ -169,6 +187,7 @@ public class PaintingGUI extends javax.swing.JFrame {
     private javax.swing.JButton paint_paint_jButton;
     private javax.swing.JTextArea proof_paint_jTextArea;
     private String bill_text;
+    private OptionQueue haveDone = null;
     // End of variables declaration                   
 }
 

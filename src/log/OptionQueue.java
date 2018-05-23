@@ -3,7 +3,7 @@ package log;
 import java.util.LinkedList;
 
 public class OptionQueue {
-	private LinkedList<Message> opq;
+	private static LinkedList<Message> opq;
 	
 	public OptionQueue(){
 		opq = new LinkedList<Message>();

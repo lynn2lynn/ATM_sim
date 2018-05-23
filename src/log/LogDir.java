@@ -16,48 +16,21 @@ public class LogDir {
 	
 	private File log;
 	private LinkedList<Message> undoneMails;
+	public static final Message COMMITTED = new Message(System.currentTimeMillis(),"commited","*",Message.COMMITED_NO,0,"*");
 	
 	public LogDir() {
 		log = new File("log.txt");
 		undoneMails = new LinkedList<Message>();
 	}
 	
-	public boolean checkUndone() {
-		this.readLog();
-		if(undoneMails.size()==0)return false;
-		return true;
-	}
-	
-	public void initLog() {
-		if(!this.checkUndone()) {//«Âø’»’÷æ
-			FileWriter fileWriter;
-			try {
-				fileWriter = new FileWriter(this.log);
-				fileWriter.write("");
-				fileWriter.flush();
-				fileWriter.close();
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-            
-		}
-		else {
-			
-		}
-		
-	}
 	
 	public void writeLog(Message msg){
 		BufferedWriter bw = null;
 		try {
-			
 			bw = new BufferedWriter(new FileWriter(this.log,true));
-			bw.write(msg.msgArchive());
-			
+			bw.write(msg.toString());
 			bw.flush();
 			bw.close();
-			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}		
@@ -70,22 +43,12 @@ public class LogDir {
 			String mail = new String();
 			
 			while(null != (mail = br.readLine())) {
-				Message msg = new Message();
-				msg.msgDeArchive(mail);
-//				if(msg.getIsCompleted()) {
-//					undoneMails.remove();
-//				}
-//				else {
-//					undoneMails.add(msg);
-//				}		
+				Message msg = Message.parse(mail);	
 			}
 			
 			Iterator<Message> it = undoneMails.iterator();
 			while(it.hasNext()) {
 				Message msg = it.next();
-//				System.out.println("++++++++undonemail: "+msg.getMsgSec()+"+++++++++++");
-				msg.printMessage();
-				//map.put(msg.getMsgSec(), msg.getIsCompleted());
 			}
 			
 			br.close();
