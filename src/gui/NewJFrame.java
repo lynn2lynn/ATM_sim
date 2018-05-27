@@ -169,11 +169,11 @@ public class NewJFrame extends javax.swing.JFrame {
     		User.accNo = accNo;
     		User.psw = psw;
     		Message login_msg = new Message(System.currentTimeMillis(),accNo,psw,Message.LOGIN_NO,0,"*");//
-    		client.sendMSG(login_msg);
+    		
+    		User.client.sendMSG(login_msg);
     		Message login_ack = client.ReciveMSG();
     		
     		System.out.println(login_ack.toString());
-    		
     		if(login_ack.getOperation() == 6) {
     			User.balance = login_ack.getDeal();
     			new FuncFrame().setVisible(true);
