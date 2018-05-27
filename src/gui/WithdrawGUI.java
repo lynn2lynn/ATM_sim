@@ -221,6 +221,8 @@ public class WithdrawGUI extends javax.swing.JFrame {
 		User.log.writeLog(with_msg);
 		Message ack = User.client.ReciveMSG();
 		if(ack.getOperation() == Message.WITHDRAW_NO) {
+			User.client.sendMSG(new Message(System.currentTimeMillis(),User.accNo,User.psw,Message.COMMITED_NO,this.withdraw_money,"*"));
+			
 			User.log.writeLog(LogDir.COMMITTED);
 			User.opq.push(with_msg);
 			User.balance = ack.getDeal();
