@@ -215,18 +215,25 @@ public class WithdrawGUI extends javax.swing.JFrame {
     
     private void withdraw_action() {
     	// TODO add your handling code here:
-    	//int withdraw_money
     	Message with_msg = new Message(System.currentTimeMillis(),User.accNo,User.psw,Message.WITHDRAW_NO,this.withdraw_money,"*");
+    	try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
     	User.client.sendMSG(with_msg);
 		User.log.writeLog(with_msg);
 		Message ack = User.client.ReciveMSG();
+		System.out.println("*************************");
+		System.out.println(ack.toString());
 		if(ack.getOperation() == Message.WITHDRAW_NO) {
-			User.client.sendMSG(new Message(System.currentTimeMillis(),User.accNo,User.psw,Message.COMMITED_NO,this.withdraw_money,"*"));
-			
+			//User.client.sendMSG(new Message(System.currentTimeMillis(),User.accNo,User.psw,Message.COMMITED_NO,this.withdraw_money,"*"));
 			User.log.writeLog(LogDir.COMMITTED);
 			User.opq.push(with_msg);
 			User.balance = ack.getDeal();
-			JOptionPane.showMessageDialog(this.getContentPane(), "取款成功！");
+			JOptionPane.showMessageDialog(this.getContentPane(), "已吐钞"+this.withdraw_money+"元！取款成功！");
+			new FuncFrame().setVisible(true);
+			this.setVisible(false);
 		}
 		else {
 			JOptionPane.showMessageDialog(this.getContentPane(), "取款失败！");

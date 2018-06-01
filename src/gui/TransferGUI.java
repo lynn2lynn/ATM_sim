@@ -158,7 +158,7 @@ public class TransferGUI extends javax.swing.JFrame {
     
     private void transfer_action() {
     	
-    	Message tran_msg = new Message(System.currentTimeMillis(),User.accNo,User.psw,Message.TRANSFER_NO,this.transfer_money,"*");
+    	Message tran_msg = new Message(System.currentTimeMillis(),User.accNo,User.psw,Message.TRANSFER_NO,this.transfer_money,this.other_account_no);
     	User.client.sendMSG(tran_msg);
     	User.log.writeLog(tran_msg);
 		Message ack = User.client.ReciveMSG();
@@ -167,6 +167,8 @@ public class TransferGUI extends javax.swing.JFrame {
 			User.opq.push(tran_msg);
 			User.balance = ack.getDeal();
 			JOptionPane.showMessageDialog(this.getContentPane(), "转账成功！");
+			new FuncFrame().setVisible(true);
+			this.setVisible(false);
 		}
 		else {
 			JOptionPane.showMessageDialog(this.getContentPane(), "转账失败！");

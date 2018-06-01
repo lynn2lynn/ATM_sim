@@ -20,4 +20,8 @@ public class OptionQueue {
 	public LinkedList<Message> getOpq(){
 		return this.opq;
 	}
+	
+	public void removeAll() {
+		OptionQueue.opq.removeAll(OptionQueue.opq);
+	}
 }

@@ -229,6 +229,8 @@ public class DespositGUI extends javax.swing.JFrame {
 			User.opq.push(desp_msg);
 			User.balance = ack.getDeal();
 			JOptionPane.showMessageDialog(this.getContentPane(), "存款成功！");
+			new FuncFrame().setVisible(true);
+			this.setVisible(false);
 		}
 		else {
 			JOptionPane.showMessageDialog(this.getContentPane(), "存款失败！");

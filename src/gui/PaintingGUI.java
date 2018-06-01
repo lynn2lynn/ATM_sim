@@ -118,13 +118,13 @@ public class PaintingGUI extends javax.swing.JFrame {
         );
 
         pack();
+        this.paint_action();
     }// </editor-fold>                        
 
     private void paint_paint_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         // TODO add your handling code here:
-    	this.paint_action();
-    	
     	JOptionPane.showMessageDialog(this.getContentPane(), "¥Ú”°≥…π¶£°");
+    	proof_paint_jTextArea.setText("");
     }                                                   
 
     private void cancel_paint_jButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                     
@@ -142,6 +142,7 @@ public class PaintingGUI extends javax.swing.JFrame {
     		bill_text += msg.displayOnText();
     	}
     	proof_paint_jTextArea.setText(bill_text);
+    	User.opq.removeAll();
     }
 
     /**
@@ -187,7 +188,6 @@ public class PaintingGUI extends javax.swing.JFrame {
     private javax.swing.JButton paint_paint_jButton;
     private javax.swing.JTextArea proof_paint_jTextArea;
     private String bill_text;
-    private OptionQueue haveDone = null;
     // End of variables declaration                   
 }
 
